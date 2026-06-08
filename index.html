@@ -20,40 +20,33 @@
             height: 80vh; 
         }
     </style>
-    <!-- Alternative CDN provider without strict origin constraints -->
-    <script src="https://cloudflare.com"></script>
-    <script src="https://cloudflare.com"></script>
 </head>
 <body>
     <div id="poker-root"></div>
 
     <script>
+        // Setup browser global environment settings
         window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <!-- Load your local component logic -->
-    <script src="./poker-component.umd.js"></script>
+    <!-- Load the modern ES module directly from your repository -->
+    <script type="module">
+        import React from 'https://esm.sh';
+        import ReactDOM from 'https://esm.sh';
+        import { Poker } from './poker-component.es.js';
 
-    <script>
-        const componentContainer = window.pokerComponent || window.PokerComponent || window;
-        const PokerElement = componentContainer.Poker;
         const targetContainer = document.getElementById('poker-root');
 
-        if (PokerElement) {
+        if (Poker) {
             try {
-                // Ensure ReactDOM loaded from the backup scripts successfully
-                if (typeof ReactDOM !== 'undefined') {
-                    const root = ReactDOM.createRoot(targetContainer);
-                    root.render(React.createElement(PokerElement));
-                    console.log("Poker game canvas successfully mounted!");
-                } else {
-                    console.error("React engines failed to download over network options.");
-                }
+                const root = ReactDOM.createRoot(targetContainer);
+                root.render(React.createElement(Poker));
+                console.log("Poker game successfully initialized via ES Modules!");
             } catch (renderError) {
-                console.error("React mounting pipeline failed:", renderError);
+                console.error("React module rendering failure:", renderError);
             }
         } else {
-            console.error("Failed to extract the Poker function from the library bindings configuration.");
+            console.error("Could not find the Poker export function inside your component module.");
         }
     </script>
 </body>
