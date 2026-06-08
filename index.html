@@ -25,14 +25,12 @@
     <div id="poker-root"></div>
 
     <script>
-        // Setup browser global environment settings
         window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <!-- Load the modern ES module directly from your repository -->
     <script type="module">
-        import React from 'https://esm.sh';
-        import ReactDOM from 'https://esm.sh';
+        import React from 'https://esm.sh/react@19';
+        import ReactDOM from 'https://esm.sh/react-dom@19/client';
         import { Poker } from './poker-component.es.js';
 
         const targetContainer = document.getElementById('poker-root');
