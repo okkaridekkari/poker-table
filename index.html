@@ -5,40 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker Game</title>
     <style>
-        body { margin: 0; padding: 0; background: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        #poker-root { width: 100%; max-width: 1200px; height: 80vh; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #1a1a1a; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        #poker-root { 
+            width: 100%; 
+            max-width: 1200px; 
+            height: 80vh; 
+        }
     </style>
+    <!-- Load React and React-DOM dependency scripts from a global network provider so the component can mount -->
+    <script src="https://unpkg.com" crossorigin></script>
+    <script src="https://unpkg.com" crossorigin></script>
 </head>
 <body>
     <div id="poker-root"></div>
 
     <script>
-        // FIXES: "Uncaught ReferenceError: process is not defined"
-        // This simulates a safe environment object for the browser
+        // Set up global environment compatibility layers
         window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <!-- Loads your compiled game logic -->
+    <!-- Load your component logic -->
     <script src="./poker-component.umd.js"></script>
-    <script>
-        // FIXES: "window.PokerComponent.init is not a function"
-        // We look for common alternative mount methods used by bundling tools
-        const component = window.pokerComponent || window.PokerComponent || window.default;
-        const targetElement = document.getElementById('poker-root');
 
-        if (component) {
-            if (typeof component.init === 'function') {
-                component.init(targetElement);
-            } else if (typeof component.render === 'function') {
-                component.render(targetElement);
-            } else if (typeof component === 'function') {
-                // If the component itself is an initialization function
-                component(targetElement);
-            } else {
-                console.log("Component loaded. Available functions:", Object.keys(component));
+    <script>
+        // Target the specific "Poker" export function shown in your console
+        const componentContainer = window.pokerComponent || window.PokerComponent || window;
+        const PokerElement = componentContainer.Poker;
+        const targetContainer = document.getElementById('poker-root');
+
+        if (PokerElement) {
+            try {
+                // Initialize the React element structure and mount it directly into your visual container
+                const root = ReactDOM.createRoot(targetContainer);
+                root.render(React.createElement(PokerElement));
+                console.log("Poker game canvas successfully mounted!");
+            } catch (renderError) {
+                console.error("React mounting pipeline failed:", renderError);
             }
         } else {
-            console.error("Could not find the global component export variable.");
+            console.error("Failed to extract the Poker function from the library bindings configuration.");
         }
     </script>
 </body>
