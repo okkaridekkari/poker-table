@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Game</title>
+    <style>
+        body { margin: 0; padding: 0; background: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #poker-root { width: 100%; max-width: 1200px; height: 80vh; }
+    </style>
+</head>
+<body>
+    <div id="poker-root"></div>
+
+    <!-- Loads your compiled game logic -->
+    <script src="./poker-component.umd.js"></script>
+    <script>
+        // Mounts the game engine inside the webpage
+        if (window.PokerComponent) {
+            window.PokerComponent.init(document.getElementById('poker-root'));
+        } else {
+            console.error("Game script found, but failed to initialize standard bindings.");
+        }
+    </script>
+</body>
+</html>
