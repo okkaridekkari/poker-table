@@ -12,14 +12,33 @@
 <body>
     <div id="poker-root"></div>
 
+    <script>
+        // FIXES: "Uncaught ReferenceError: process is not defined"
+        // This simulates a safe environment object for the browser
+        window.process = { env: { NODE_ENV: 'production' } };
+    </script>
+
     <!-- Loads your compiled game logic -->
     <script src="./poker-component.umd.js"></script>
     <script>
-        // Mounts the game engine inside the webpage
-        if (window.PokerComponent) {
-            window.PokerComponent.init(document.getElementById('poker-root'));
+        // FIXES: "window.PokerComponent.init is not a function"
+        // We look for common alternative mount methods used by bundling tools
+        const component = window.pokerComponent || window.PokerComponent || window.default;
+        const targetElement = document.getElementById('poker-root');
+
+        if (component) {
+            if (typeof component.init === 'function') {
+                component.init(targetElement);
+            } else if (typeof component.render === 'function') {
+                component.render(targetElement);
+            } else if (typeof component === 'function') {
+                // If the component itself is an initialization function
+                component(targetElement);
+            } else {
+                console.log("Component loaded. Available functions:", Object.keys(component));
+            }
         } else {
-            console.error("Game script found, but failed to initialize standard bindings.");
+            console.error("Could not find the global component export variable.");
         }
     </script>
 </body>
