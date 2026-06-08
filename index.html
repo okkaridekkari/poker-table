@@ -20,33 +20,35 @@
             height: 80vh; 
         }
     </style>
-    <!-- Load React and React-DOM dependency scripts from a global network provider so the component can mount -->
-    <script src="https://unpkg.com" crossorigin></script>
-    <script src="https://unpkg.com" crossorigin></script>
+    <!-- Alternative CDN provider without strict origin constraints -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
 </head>
 <body>
     <div id="poker-root"></div>
 
     <script>
-        // Set up global environment compatibility layers
         window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
-    <!-- Load your component logic -->
+    <!-- Load your local component logic -->
     <script src="./poker-component.umd.js"></script>
 
     <script>
-        // Target the specific "Poker" export function shown in your console
         const componentContainer = window.pokerComponent || window.PokerComponent || window;
         const PokerElement = componentContainer.Poker;
         const targetContainer = document.getElementById('poker-root');
 
         if (PokerElement) {
             try {
-                // Initialize the React element structure and mount it directly into your visual container
-                const root = ReactDOM.createRoot(targetContainer);
-                root.render(React.createElement(PokerElement));
-                console.log("Poker game canvas successfully mounted!");
+                // Ensure ReactDOM loaded from the backup scripts successfully
+                if (typeof ReactDOM !== 'undefined') {
+                    const root = ReactDOM.createRoot(targetContainer);
+                    root.render(React.createElement(PokerElement));
+                    console.log("Poker game canvas successfully mounted!");
+                } else {
+                    console.error("React engines failed to download over network options.");
+                }
             } catch (renderError) {
                 console.error("React mounting pipeline failed:", renderError);
             }
